@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../../../../../.">
+
+  <import file="db-default.xml"/>
+  
+  <component name="dbManager-default" class="nablarch.core.db.transaction.SimpleDbTransactionManager">
+  </component>
+
+  <!-- SQLLoaderの設定 -->
+  <component name="sqlLoader" class="nablarch.core.db.statement.BasicSqlLoader">
+    <property name="fileEncoding" value="utf-8"/>
+    <property name="extension" value="sql"/>
+  </component>
+
+  <!-- フィールドアノテーションハンドラの設定 -->
+  <list name="fieldAnnotationHandler">
+    <!-- 現在日時設定ハンドラ -->
+    <component
+            class="nablarch.core.db.statement.autoproperty.CurrentDateTimeAnnotationHandler">
+      <property name="dateProvider" ref="systemTimeProvider"/>
+      <property name="dateFormat" value="yyyyMMdd"/>
+    </component>
+    <!-- ユーザID設定ハンドラ -->
+    <component
+            class="nablarch.core.db.statement.autoproperty.UserIdAnnotationHandler">
+    </component>
+  </list>
+
+  <!-- システム日時取得コンポーネントの設定 -->
+  <component name="systemTimeProvider"
+             class="nablarch.util.FixedSystemTimeProvider">
+    <property name="fixedDate" value="20110101000000"/>
+  </component>
+
+  <!-- データベースアクセス例外用の設定 -->
+  <component name="dbExceptionFactory"
+             class="nablarch.core.db.statement.exception.BasicSqlStatementExceptionFactory" />
+
+  <component name="stringResourceHolder" class="nablarch.core.message.MockStringResourceHolder">
+  </component>
+
+  <component name="validationManager" class="nablarch.core.validation.ValidationManager">
+    <property name="convertors">
+      <list>
+        <component class="nablarch.core.validation.convertor.StringConvertor">
+          <property name="conversionFailedMessageId" value="MSG00001"/>
+        </component>
+        <component class="nablarch.core.validation.convertor.StringArrayConvertor">
+        </component>
+        <component class="nablarch.core.validation.convertor.LongConvertor">
+          <property name="invalidDigitsIntegerMessageId" value="MSG00031"/>
+          <property name="multiInputMessageId" value="MSG00001"/>
+        </component>
+        <component class="nablarch.core.validation.convertor.BigDecimalConvertor">
+          <property name="invalidDigitsIntegerMessageId" value="MSG00031"/>
+          <property name="invalidDigitsFractionMessageId" value="MSG00032"/>
+          <property name="multiInputMessageId" value="MSG00001"/>
+        </component>
+      </list>
+    </property>
+    <property name="validators">
+      <list>
+        <component class="nablarch.core.validation.validator.RequiredValidator">
+          <property name="messageId" value="MSG00011"/>
+        </component>
+        <component class="nablarch.core.validation.validator.NumberRangeValidator">
+          <property name="maxMessageId" value="MSG00051"/>
+          <property name="maxAndMinMessageId" value="MSG00052"/>
+          <property name="minMessageId" value="MSG00053"/>
+        </component>
+        <component class="nablarch.core.validation.validator.LengthValidator">
+          <property name="maxMessageId" value="MSG00021"/>
+          <property name="maxAndMinMessageId" value="MSG00022"/>
+          <property name="fixLengthMessageId" value="MSG00023"/>
+        </component>
+      </list>
+    </property>
+    <property name="formDefinitionCache">
+      <component name="formDefinitionCache" class="nablarch.core.cache.BasicStaticDataCache">
+        <property name="loader">
+          <component class="nablarch.core.validation.FormValidationDefinitionLoader"/>
+        </property>
+      </component>
+    </property>
+  </component>
+
+  <!-- filePathSetting のリセット用 -->
+  <component name="filePathSetting"
+      class="nablarch.core.util.FilePathSetting">
+    <property name="basePathSettings">
+      <map>
+        <entry key="format" value="file:./temp/" />
+      </map>
+    </property>
+    <property name="fileExtensions">
+      <map>
+        <entry key="format" value="fmt" />
+      </map>
+    </property>
+  </component>
+</component-configuration>
