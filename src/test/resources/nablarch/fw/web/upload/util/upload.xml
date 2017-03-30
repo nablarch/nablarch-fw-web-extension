@@ -8,26 +8,6 @@
   <component name="dbManager-default" class="nablarch.core.db.transaction.SimpleDbTransactionManager">
   </component>
 
-  <!-- SQLLoaderの設定 -->
-  <component name="sqlLoader" class="nablarch.core.db.statement.BasicSqlLoader">
-    <property name="fileEncoding" value="utf-8"/>
-    <property name="extension" value="sql"/>
-  </component>
-
-  <!-- フィールドアノテーションハンドラの設定 -->
-  <list name="fieldAnnotationHandler">
-    <!-- 現在日時設定ハンドラ -->
-    <component
-            class="nablarch.core.db.statement.autoproperty.CurrentDateTimeAnnotationHandler">
-      <property name="dateProvider" ref="systemTimeProvider"/>
-      <property name="dateFormat" value="yyyyMMdd"/>
-    </component>
-    <!-- ユーザID設定ハンドラ -->
-    <component
-            class="nablarch.core.db.statement.autoproperty.UserIdAnnotationHandler">
-    </component>
-  </list>
-
   <!-- システム日時取得コンポーネントの設定 -->
   <component name="systemTimeProvider"
              class="nablarch.util.FixedSystemTimeProvider">
