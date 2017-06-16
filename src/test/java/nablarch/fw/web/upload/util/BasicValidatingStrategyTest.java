@@ -4,10 +4,11 @@ import nablarch.core.db.support.DbAccessSupport;
 import nablarch.core.message.ApplicationException;
 import nablarch.core.message.Message;
 import nablarch.core.message.MessageLevel;
+import nablarch.core.util.FilePathSetting;
 import nablarch.fw.web.upload.PartInfo;
 import nablarch.test.support.db.helper.DatabaseTestRunner;
 import nablarch.test.support.db.helper.VariousDbTestHelper;
-import nablarch.test.support.tool.Hereis;
+import nablarch.util.FileProvider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -38,7 +39,7 @@ public class BasicValidatingStrategyTest extends TestSetUpper {
     public void testSuccess() throws SQLException {
 
         // アップロードファイルを準備
-        File uploaded = Hereis.file("./temp/moge.txt");
+        File uploaded = FileProvider.file(FilePathSetting.getInstance().getBaseDirectory(FORMAT_BASE_PATH_NAME) + "/moge.txt", "1tokyo    2osaka    ");
         /*
         1tokyo    2osaka    */
         PartInfo part = PartInfo.newInstance("fuga");
@@ -67,7 +68,7 @@ public class BasicValidatingStrategyTest extends TestSetUpper {
     public void testFail() {
 
         // アップロードファイルを準備
-        File uploaded = Hereis.file("./temp/moge.txt");
+        File uploaded = FileProvider.file(FilePathSetting.getInstance().getBaseDirectory(FORMAT_BASE_PATH_NAME) + "/moge.txt", "Ztokyo    2aa       ");
         /*
         Ztokyo    2aa       */
         final PartInfo part = PartInfo.newInstance("fuga");

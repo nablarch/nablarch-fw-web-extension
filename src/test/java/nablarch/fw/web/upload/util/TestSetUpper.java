@@ -18,10 +18,12 @@ import nablarch.core.validation.validator.Required;
 import nablarch.test.support.SystemRepositoryResource;
 import nablarch.test.support.db.helper.VariousDbTestHelper;
 import nablarch.test.support.tool.Hereis;
+import nablarch.util.FileProvider;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.util.Locale;
@@ -34,6 +36,9 @@ public class TestSetUpper {
 
     @Rule
     public SystemRepositoryResource repositoryResource = new SystemRepositoryResource("nablarch/fw/web/upload/util/upload.xml");
+
+    @Rule
+    public TemporaryFolder tempFolder = new TemporaryFolder();
 
     protected static TransactionManagerConnection tmConn;
 
@@ -77,8 +82,8 @@ public class TestSetUpper {
         repositoryResource.getComponentByType(MockStringResourceHolder.class).setMessages(MESSAGES);
 
 		FilePathSetting.getInstance()
-				.addBasePathSetting(FORMAT_BASE_PATH_NAME, "file:./temp")
-				.addBasePathSetting("format", "file:./temp")
+				.addBasePathSetting(FORMAT_BASE_PATH_NAME, "file:" + tempFolder.getRoot())
+				.addBasePathSetting("format", "file:" + tempFolder.getRoot())
 				.addFileExtensions(FORMAT_BASE_PATH_NAME, FORMAT_SUFFIX);
         createFormat();
         createInvalidFormat();
@@ -93,8 +98,18 @@ public class TestSetUpper {
         DbConnectionContext.removeConnection();
     }
 
-    static File createFormat() {
-        return Hereis.file("./temp/FMT001." + FORMAT_SUFFIX);
+    File createFormat() {
+        String contents = "file-type:     \"Fixed\"\n" +
+                "text-encoding: \"ms932\"\n" +
+                "\n" +
+                "# 各レコードの長さ\n" +
+                "record-length: 10\n" +
+                "\n" +
+                "# データレコード定義\n" +
+                "[Default]\n" +
+                "1    id            Z(1)\n" +
+                "2    city          X(9)";
+        return FileProvider.file(tempFolder.getRoot() + "/FMT001." + FORMAT_SUFFIX, contents);
         /*
         file-type:     "Fixed"
         text-encoding: "ms932"
@@ -109,9 +124,9 @@ public class TestSetUpper {
         */
     }
 
-    static File createInvalidFormat() {
-        File file = FilePathSetting.getInstance().getFileWithoutCreate("format", "INVALID");
-        return Hereis.file(file.getAbsolutePath());
+    File createInvalidFormat() {
+        String contents = "おかしなフォーマット定義ファイル";
+        return FileProvider.file(tempFolder.getRoot() + "/INVALID." + FORMAT_SUFFIX, contents);
         /*
         おかしなフォーマット定義ファイル
         */

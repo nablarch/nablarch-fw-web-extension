@@ -16,6 +16,7 @@ import nablarch.fw.web.upload.PartInfo;
 import nablarch.fw.web.upload.util.BulkValidationResult.ErrorMessages;
 import nablarch.test.support.db.helper.DatabaseTestRunner;
 import nablarch.test.support.tool.Hereis;
+import nablarch.util.FileProvider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -48,7 +49,7 @@ public class UploadHelperTest extends TestSetUpper {
     @Test
     public void testMoveUploadedFile() throws IOException {
         // 移動先の設定
-        FilePathSetting.getInstance().addBasePathSetting("temp.dir", "file:./temp");
+        FilePathSetting.getInstance().addBasePathSetting("temp.dir", FilePathSetting.getInstance().getBasePathUrl(FORMAT_BASE_PATH_NAME).toString());
 
         // パート情報を生成
         PartInfo part = PartInfo.newInstance("file");
@@ -60,7 +61,7 @@ public class UploadHelperTest extends TestSetUpper {
         target.moveFileTo("temp.dir", "hoge.txt");
 
         // ファイルが移動されていること
-        File removed = new File("temp/hoge.txt");
+        File removed = new File(FilePathSetting.getInstance().getBaseDirectory(FORMAT_BASE_PATH_NAME) + "/hoge.txt");
         assertThat(removed.exists(), is(true));
         removed.delete();
     }
@@ -73,8 +74,8 @@ public class UploadHelperTest extends TestSetUpper {
     @Test
     public void testToByteArray() throws IOException {
         // アップロードファイルを準備
-        String tempFile = "temp/fuga.txt";
-        Hereis.file("temp/fuga.txt");
+        String tempFile =  FilePathSetting.getInstance().getBaseDirectory(FORMAT_BASE_PATH_NAME) + "/fuga.txt";
+        FileProvider.file(FilePathSetting.getInstance().getBaseDirectory(FORMAT_BASE_PATH_NAME) + "/fuga.txt", "fugafuga");
         /*
         fugafuga*/
 
@@ -120,7 +121,7 @@ public class UploadHelperTest extends TestSetUpper {
     public void testGetFormatter() throws IOException {
 
         // アップロードファイルを準備
-        File uploaded = Hereis.file("./temp/fuga.txt");
+        File uploaded = FileProvider.file(FilePathSetting.getInstance().getBaseDirectory(FORMAT_BASE_PATH_NAME) + "/fuga.txt", "1tokyo    2osaka    ");
         /*
         1tokyo    2osaka    */
         PartInfo part = PartInfo.newInstance("fuga");
@@ -148,7 +149,7 @@ public class UploadHelperTest extends TestSetUpper {
     public void testValidObjects() throws IOException {
 
         // アップロードファイルを準備
-        File uploaded = Hereis.file("./temp/fuga.txt");
+        File uploaded = FileProvider.file(FilePathSetting.getInstance().getBaseDirectory(FORMAT_BASE_PATH_NAME) + "/fuga.txt", "1tokyo    2osaka    ");
         /*
         1tokyo    2osaka    */
         PartInfo part = PartInfo.newInstance("fuga");
@@ -179,7 +180,7 @@ public class UploadHelperTest extends TestSetUpper {
     public void testGetErrorMessages() {
 
         // アップロードファイルを準備
-        File uploaded = Hereis.file("./temp/fuga.txt");
+        File uploaded = FileProvider.file(FilePathSetting.getInstance().getBaseDirectory(FORMAT_BASE_PATH_NAME) + "/fuga.txt", "1ab       Zosaka    ");
         /*
         1ab       Zosaka    */
         PartInfo part = PartInfo.newInstance("fuga");
@@ -221,7 +222,7 @@ public class UploadHelperTest extends TestSetUpper {
     @Test
     public void testGetValidObjectsFail() {
         // アップロードファイルを準備
-        File uploaded = Hereis.file("./temp/moge.txt");
+        File uploaded = FileProvider.file(FilePathSetting.getInstance().getBaseDirectory(FORMAT_BASE_PATH_NAME) + "/moge.txt", "Ztokyo    2osaka    ");
         /*
         Ztokyo    2osaka    */
         PartInfo part = PartInfo.newInstance("fuga");
@@ -251,7 +252,7 @@ public class UploadHelperTest extends TestSetUpper {
     @Test
     public void testInvalidFormatDefinitionFile() {
         // アップロードファイルを準備
-        File uploaded = Hereis.file("./temp/moge.txt");
+        File uploaded = FileProvider.file(FilePathSetting.getInstance().getBaseDirectory(FORMAT_BASE_PATH_NAME) + "/moge.txt", "1tokyo    2osaka    ");
         /*
         1tokyo    2osaka    */
         PartInfo part = PartInfo.newInstance("fuga");
@@ -277,7 +278,7 @@ public class UploadHelperTest extends TestSetUpper {
     @Test
     public void testLayoutFileNotFound() throws IOException {
         // アップロードファイルを準備
-        File uploaded = Hereis.file("./temp/moge.txt");
+        File uploaded = FileProvider.file(FilePathSetting.getInstance().getBaseDirectory(FORMAT_BASE_PATH_NAME) + "/moge.txt", "1tokyo    2osaka    ");
         /*
         1tokyo    2osaka    */
         PartInfo part = PartInfo.newInstance("fuga");
