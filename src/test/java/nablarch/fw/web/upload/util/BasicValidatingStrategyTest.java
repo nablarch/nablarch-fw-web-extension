@@ -7,11 +7,11 @@ import nablarch.core.message.MessageLevel;
 import nablarch.fw.web.upload.PartInfo;
 import nablarch.test.support.db.helper.DatabaseTestRunner;
 import nablarch.test.support.db.helper.VariousDbTestHelper;
-import nablarch.test.support.tool.Hereis;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -33,14 +33,13 @@ public class BasicValidatingStrategyTest extends TestSetUpper {
      * 一括登録時、精査が成功した場合は、ファイルの全レコードが登録されること
      *
      * @throws SQLException 予期しない例外
+     * @throws IOException 予期しない例外
      */
     @Test
-    public void testSuccess() throws SQLException {
+    public void testSuccess() throws SQLException, IOException {
 
         // アップロードファイルを準備
-        File uploaded = Hereis.file("./temp/moge.txt");
-        /*
-        1tokyo    2osaka    */
+        File uploaded = testFileWriter.writeFile("moge.txt", "1tokyo    2osaka    ");
         PartInfo part = PartInfo.newInstance("fuga");
         part.setSavedFile(uploaded);
 
@@ -62,14 +61,15 @@ public class BasicValidatingStrategyTest extends TestSetUpper {
         assertThat(testCities.get(1).city, is("osaka"));
     }
 
-    /** 一括登録が精査失敗した場合、例外が送出されること。 */
+    /** 一括登録が精査失敗した場合、例外が送出されること。
+     *
+     * @throws IOException 予期しない例外
+     */
     @Test
-    public void testFail() {
+    public void testFail() throws IOException {
 
         // アップロードファイルを準備
-        File uploaded = Hereis.file("./temp/moge.txt");
-        /*
-        Ztokyo    2aa       */
+        File uploaded = testFileWriter.writeFile("moge.txt", "Ztokyo    2aa       ");
         final PartInfo part = PartInfo.newInstance("fuga");
         part.setSavedFile(uploaded);
 

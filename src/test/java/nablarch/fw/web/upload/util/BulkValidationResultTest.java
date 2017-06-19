@@ -5,7 +5,6 @@ import nablarch.core.db.support.DbAccessSupport;
 import nablarch.fw.web.upload.PartInfo;
 import nablarch.test.support.db.helper.DatabaseTestRunner;
 import nablarch.test.support.db.helper.VariousDbTestHelper;
-import nablarch.test.support.tool.Hereis;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,9 +73,6 @@ public class BulkValidationResultTest extends TestSetUpper {
 
     private int exec(BulkValidationResult<Form> target) {
 
-        // アップロードファイルを準備
-        PartInfo part = PartInfo.newInstance("fuga");
-        part.setSavedFile(Hereis.file("./temp/fuga.txt"));
         target.addValidObject(new Form(1L, "tokyo"));
         target.addValidObject(new Form(2L, "osaka"));
         target.addValidObject(new Form(3L, "kyoto"));
