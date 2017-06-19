@@ -37,14 +37,6 @@ public class TestFileWriter {
 
         Charset charset = Charset.defaultCharset();
 
-        String content="";
-        for(int i = 0; i < contents.length; i++){
-            content += contents[i];
-            if(i != contents.length - 1){
-                content += "\n";
-            }
-        }
-
         OutputStream os = null;
         Writer w = null;
         BufferedWriter bw = null;
@@ -53,13 +45,15 @@ public class TestFileWriter {
             os = new FileOutputStream(file);
             w  = new OutputStreamWriter(os, charset);
             bw = new BufferedWriter(w);
-            bw.write(content);
+            for(int i = 0; i < contents.length - 1; i++){
+                bw.write(contents[i]);
+                bw.newLine();
+            }
+            bw.write(contents[contents.length - 1]);
         } catch (IOException e) {
             throw e;
         } finally {
             if (bw != null) bw.close();
-            if (w  != null) w .close();
-            if (os != null) os.close();
         }
         return file;
     }

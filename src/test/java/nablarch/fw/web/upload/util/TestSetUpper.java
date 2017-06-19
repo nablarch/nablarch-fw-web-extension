@@ -83,11 +83,11 @@ public class TestSetUpper {
 
         repositoryResource.getComponentByType(MockStringResourceHolder.class).setMessages(MESSAGES);
 
-        testFileWriter = new TestFileWriter(tempFolder.getRoot().toString());
+        testFileWriter = new TestFileWriter(getDirectoryRootName());
 
 		FilePathSetting.getInstance()
-				.addBasePathSetting(FORMAT_BASE_PATH_NAME, "file:" + tempFolder.getRoot())
-				.addBasePathSetting("format", "file:" + tempFolder.getRoot())
+				.addBasePathSetting(FORMAT_BASE_PATH_NAME, "file:" + getDirectoryRootName())
+				.addBasePathSetting("format", "file:" + getDirectoryRootName())
 				.addFileExtensions(FORMAT_BASE_PATH_NAME, FORMAT_SUFFIX);
         createFormat();
         createInvalidFormat();
@@ -103,7 +103,19 @@ public class TestSetUpper {
     }
 
     File createFormat() throws IOException {
-        String[] contents = {"file-type:     \"Fixed\"", "text-encoding: \"ms932\"", "", "# 各レコードの長さ", "record-length: 10", "", "# データレコード定義", "[Default]",  "1    id            Z(1)", "2    city          X(9)"};
+        String[] contents = {
+                "file-type:     \"Fixed\"",
+                "text-encoding: \"ms932\"",
+                "",
+                "# 各レコードの長さ",
+                "record-length: 10",
+                "",
+                "# データレコード定義",
+                "[Default]",
+                "1    id            Z(1)",
+                "2    city          X(9)",
+                ""
+        };
         return testFileWriter.writeFile("FMT001." + FORMAT_SUFFIX, contents);
     }
 
@@ -111,6 +123,9 @@ public class TestSetUpper {
         return testFileWriter.writeFile("INVALID." + FORMAT_SUFFIX, "おかしなフォーマット定義ファイル");
     }
 
+    protected String getDirectoryRootName() {
+        return tempFolder.getRoot().toString();
+    }
 
     private static void init(String... targetNames) {
         for (String e : targetNames) {

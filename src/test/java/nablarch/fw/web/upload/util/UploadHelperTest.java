@@ -47,7 +47,7 @@ public class UploadHelperTest extends TestSetUpper {
     @Test
     public void testMoveUploadedFile() throws IOException {
         // 移動先の設定
-        FilePathSetting.getInstance().addBasePathSetting("temp.dir", "file:" + tempFolder.getRoot());
+        FilePathSetting.getInstance().addBasePathSetting("temp.dir", "file:" + getDirectoryRootName());
 
         // パート情報を生成
         PartInfo part = PartInfo.newInstance("file");
@@ -59,7 +59,7 @@ public class UploadHelperTest extends TestSetUpper {
         target.moveFileTo("temp.dir", "hoge.txt");
 
         // ファイルが移動されていること
-        File removed = new File(tempFolder.getRoot() + "/hoge.txt");
+        File removed = new File(getDirectoryRootName() + "/hoge.txt");
         assertThat(removed.exists(), is(true));
         removed.delete();
     }
