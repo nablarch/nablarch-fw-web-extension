@@ -17,8 +17,7 @@ import nablarch.core.validation.validator.Length;
 import nablarch.core.validation.validator.Required;
 import nablarch.test.support.SystemRepositoryResource;
 import nablarch.test.support.db.helper.VariousDbTestHelper;
-import nablarch.test.support.tool.Hereis;
-import nablarch.util.FileProvider;
+import nablarch.io.TestFileWriter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -26,6 +25,7 @@ import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 
@@ -39,6 +39,8 @@ public class TestSetUpper {
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
+
+    protected TestFileWriter testFileWriter;
 
     protected static TransactionManagerConnection tmConn;
 
@@ -81,6 +83,8 @@ public class TestSetUpper {
 
         repositoryResource.getComponentByType(MockStringResourceHolder.class).setMessages(MESSAGES);
 
+        testFileWriter = new TestFileWriter(tempFolder.getRoot().toString());
+
 		FilePathSetting.getInstance()
 				.addBasePathSetting(FORMAT_BASE_PATH_NAME, "file:" + tempFolder.getRoot())
 				.addBasePathSetting("format", "file:" + tempFolder.getRoot())
@@ -98,38 +102,13 @@ public class TestSetUpper {
         DbConnectionContext.removeConnection();
     }
 
-    File createFormat() {
-        String contents = "file-type:     \"Fixed\"\n" +
-                "text-encoding: \"ms932\"\n" +
-                "\n" +
-                "# 各レコードの長さ\n" +
-                "record-length: 10\n" +
-                "\n" +
-                "# データレコード定義\n" +
-                "[Default]\n" +
-                "1    id            Z(1)\n" +
-                "2    city          X(9)";
-        return FileProvider.file(tempFolder.getRoot() + "/FMT001." + FORMAT_SUFFIX, contents);
-        /*
-        file-type:     "Fixed"
-        text-encoding: "ms932"
-
-        # 各レコードの長さ
-        record-length: 10
-
-        # データレコード定義
-        [Default]
-        1    id            Z(1)
-        2    city          X(9)
-        */
+    File createFormat() throws IOException {
+        String[] contents = {"file-type:     \"Fixed\"", "text-encoding: \"ms932\"", "", "# 各レコードの長さ", "record-length: 10", "", "# データレコード定義", "[Default]",  "1    id            Z(1)", "2    city          X(9)"};
+        return testFileWriter.writeFile("FMT001." + FORMAT_SUFFIX, contents);
     }
 
-    File createInvalidFormat() {
-        String contents = "おかしなフォーマット定義ファイル";
-        return FileProvider.file(tempFolder.getRoot() + "/INVALID." + FORMAT_SUFFIX, contents);
-        /*
-        おかしなフォーマット定義ファイル
-        */
+    File createInvalidFormat() throws IOException {
+        return testFileWriter.writeFile("INVALID." + FORMAT_SUFFIX, "おかしなフォーマット定義ファイル");
     }
 
 

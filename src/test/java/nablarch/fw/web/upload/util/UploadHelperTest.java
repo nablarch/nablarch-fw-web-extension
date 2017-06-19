@@ -15,8 +15,6 @@ import nablarch.core.validation.ValidationUtil;
 import nablarch.fw.web.upload.PartInfo;
 import nablarch.fw.web.upload.util.BulkValidationResult.ErrorMessages;
 import nablarch.test.support.db.helper.DatabaseTestRunner;
-import nablarch.test.support.tool.Hereis;
-import nablarch.util.FileProvider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -49,7 +47,7 @@ public class UploadHelperTest extends TestSetUpper {
     @Test
     public void testMoveUploadedFile() throws IOException {
         // 移動先の設定
-        FilePathSetting.getInstance().addBasePathSetting("temp.dir", FilePathSetting.getInstance().getBasePathUrl(FORMAT_BASE_PATH_NAME).toString());
+        FilePathSetting.getInstance().addBasePathSetting("temp.dir", "file:" + tempFolder.getRoot());
 
         // パート情報を生成
         PartInfo part = PartInfo.newInstance("file");
@@ -61,7 +59,7 @@ public class UploadHelperTest extends TestSetUpper {
         target.moveFileTo("temp.dir", "hoge.txt");
 
         // ファイルが移動されていること
-        File removed = new File(FilePathSetting.getInstance().getBaseDirectory(FORMAT_BASE_PATH_NAME) + "/hoge.txt");
+        File removed = new File(tempFolder.getRoot() + "/hoge.txt");
         assertThat(removed.exists(), is(true));
         removed.delete();
     }
@@ -75,9 +73,7 @@ public class UploadHelperTest extends TestSetUpper {
     public void testToByteArray() throws IOException {
         // アップロードファイルを準備
         String tempFile =  FilePathSetting.getInstance().getBaseDirectory(FORMAT_BASE_PATH_NAME) + "/fuga.txt";
-        FileProvider.file(FilePathSetting.getInstance().getBaseDirectory(FORMAT_BASE_PATH_NAME) + "/fuga.txt", "fugafuga");
-        /*
-        fugafuga*/
+        testFileWriter.writeFile("fuga.txt", "fugafuga");
 
         PartInfo part = PartInfo.newInstance("fuga");
         part.setSavedFile(new File(tempFile));
@@ -121,9 +117,7 @@ public class UploadHelperTest extends TestSetUpper {
     public void testGetFormatter() throws IOException {
 
         // アップロードファイルを準備
-        File uploaded = FileProvider.file(FilePathSetting.getInstance().getBaseDirectory(FORMAT_BASE_PATH_NAME) + "/fuga.txt", "1tokyo    2osaka    ");
-        /*
-        1tokyo    2osaka    */
+        File uploaded = testFileWriter.writeFile("fuga.txt", "1tokyo    2osaka    ");
         PartInfo part = PartInfo.newInstance("fuga");
         part.setSavedFile(uploaded);
         // 実行
@@ -149,9 +143,7 @@ public class UploadHelperTest extends TestSetUpper {
     public void testValidObjects() throws IOException {
 
         // アップロードファイルを準備
-        File uploaded = FileProvider.file(FilePathSetting.getInstance().getBaseDirectory(FORMAT_BASE_PATH_NAME) + "/fuga.txt", "1tokyo    2osaka    ");
-        /*
-        1tokyo    2osaka    */
+        File uploaded = testFileWriter.writeFile("fuga.txt", "1tokyo    2osaka    ");
         PartInfo part = PartInfo.newInstance("fuga");
         part.setSavedFile(uploaded);
         // 実行
@@ -175,14 +167,16 @@ public class UploadHelperTest extends TestSetUpper {
         assertThat(second.getCity(), is("osaka"));
     }
 
-    /** 精査が失敗した時、エラーメッセージが取得できること。 */
+    /**
+     * 精査が失敗した時、エラーメッセージが取得できること。
+     *
+     * @throws IOException 予期しない例外
+     */
     @Test
-    public void testGetErrorMessages() {
+    public void testGetErrorMessages() throws IOException {
 
         // アップロードファイルを準備
-        File uploaded = FileProvider.file(FilePathSetting.getInstance().getBaseDirectory(FORMAT_BASE_PATH_NAME) + "/fuga.txt", "1ab       Zosaka    ");
-        /*
-        1ab       Zosaka    */
+        File uploaded = testFileWriter.writeFile("fuga.txt", "1ab       Zosaka    ");
         PartInfo part = PartInfo.newInstance("fuga");
         part.setSavedFile(uploaded);
 
@@ -218,13 +212,13 @@ public class UploadHelperTest extends TestSetUpper {
     /**
      * 精査済みオブジェクトを取得する際、精査エラーが１件でもある場合は、
      * 例外が発生すること。
+     *
+     * @throws IOException 予期しない例外
      */
     @Test
-    public void testGetValidObjectsFail() {
+    public void testGetValidObjectsFail() throws IOException {
         // アップロードファイルを準備
-        File uploaded = FileProvider.file(FilePathSetting.getInstance().getBaseDirectory(FORMAT_BASE_PATH_NAME) + "/moge.txt", "Ztokyo    2osaka    ");
-        /*
-        Ztokyo    2osaka    */
+        File uploaded = testFileWriter.writeFile("moge.txt", "Ztokyo    2osaka    ");
         PartInfo part = PartInfo.newInstance("fuga");
         part.setSavedFile(uploaded);
         // 実行
@@ -250,11 +244,9 @@ public class UploadHelperTest extends TestSetUpper {
     }
 
     @Test
-    public void testInvalidFormatDefinitionFile() {
+    public void testInvalidFormatDefinitionFile() throws IOException {
         // アップロードファイルを準備
-        File uploaded = FileProvider.file(FilePathSetting.getInstance().getBaseDirectory(FORMAT_BASE_PATH_NAME) + "/moge.txt", "1tokyo    2osaka    ");
-        /*
-        1tokyo    2osaka    */
+        File uploaded = testFileWriter.writeFile("moge.txt", "1tokyo    2osaka    ");
         PartInfo part = PartInfo.newInstance("fuga");
         part.setSavedFile(uploaded);
         // 実行
@@ -278,9 +270,7 @@ public class UploadHelperTest extends TestSetUpper {
     @Test
     public void testLayoutFileNotFound() throws IOException {
         // アップロードファイルを準備
-        File uploaded = FileProvider.file(FilePathSetting.getInstance().getBaseDirectory(FORMAT_BASE_PATH_NAME) + "/moge.txt", "1tokyo    2osaka    ");
-        /*
-        1tokyo    2osaka    */
+        File uploaded = testFileWriter.writeFile("moge.txt", "1tokyo    2osaka    ");
         PartInfo part = PartInfo.newInstance("fuga");
         part.setSavedFile(uploaded);
         
