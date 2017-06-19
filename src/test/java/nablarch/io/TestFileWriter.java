@@ -37,23 +37,19 @@ public class TestFileWriter {
 
         Charset charset = Charset.defaultCharset();
 
-        OutputStream os = null;
-        Writer w = null;
         BufferedWriter bw = null;
 
         try {
-            os = new FileOutputStream(file);
-            w  = new OutputStreamWriter(os, charset);
-            bw = new BufferedWriter(w);
+            bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), charset));
             for(int i = 0; i < contents.length - 1; i++){
                 bw.write(contents[i]);
                 bw.newLine();
             }
             bw.write(contents[contents.length - 1]);
-        } catch (IOException e) {
-            throw e;
         } finally {
-            if (bw != null) bw.close();
+            if (bw != null) {
+                bw.close();
+            }
         }
         return file;
     }
