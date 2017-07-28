@@ -45,7 +45,6 @@ test {
           '-XX:-UseSplitVerifier'
   )
 
-  ignoreFailures = true
 
   beforeTest { descriptor ->
     logger.lifecycle("Running test: " + descriptor)
