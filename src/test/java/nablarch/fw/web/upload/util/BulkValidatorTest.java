@@ -4,7 +4,10 @@ import nablarch.core.dataformat.DataRecord;
 import nablarch.core.dataformat.DataRecordFormatter;
 import nablarch.core.dataformat.FixedLengthDataRecordFormatter;
 import nablarch.core.dataformat.InvalidDataFormatException;
+import nablarch.test.support.db.helper.DatabaseTestRunner;
+
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.io.IOException;
 
@@ -17,6 +20,7 @@ import static org.junit.matchers.JUnitMatchers.containsString;
 /**
  * @author T.Kawasaki
  */
+@RunWith(DatabaseTestRunner.class)
 public class BulkValidatorTest extends TestSetUpper {
 
     /** IO例外が発生した場合、実行時例外にラップされること。 */
