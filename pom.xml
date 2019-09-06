@@ -22,10 +22,19 @@
   
   <profiles>
     <profile>
-      <id>java9</id>
-      <properties>
-        <junit.additionalArgLine>--add-modules java.activation</junit.additionalArgLine>
-      </properties>
+      <id>java11</id>
+      <dependencies>
+        <dependency>
+          <groupId>javax.activation</groupId>
+          <artifactId>javax.activation-api</artifactId>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>com.sun.activation</groupId>
+          <artifactId>javax.activation</artifactId>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
     </profile>
   </profiles>
 
