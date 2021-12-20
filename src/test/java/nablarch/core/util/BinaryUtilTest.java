@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
@@ -54,9 +55,11 @@ public class BinaryUtilTest {
 
         } catch(Throwable t) {
             assertThat(t.getClass().getName(), is(NumberFormatException.class.getName()));
+            // Java 12 で NumberFormatException のメッセージの最後に基数の情報が追加された。
+            // Java 12 以上でもテストが通るようにするため、メッセージは前方一致で検証するようにしている。
             assertThat(
                 t.getMessage()
-              , is("invalid hexadecimal expression. [hoge] :For input string: \"ho\"")
+              , is(startsWith("invalid hexadecimal expression. [hoge] :For input string: \"ho\""))
             );
         }
     }
