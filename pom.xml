@@ -19,24 +19,6 @@
     <artifactId>nablarch-parent</artifactId>
     <version>6-NEXT-SNAPSHOT</version>
   </parent>
-  
-  <profiles>
-    <profile>
-      <id>java11</id>
-      <dependencies>
-        <dependency>
-          <groupId>javax.activation</groupId>
-          <artifactId>javax.activation-api</artifactId>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>com.sun.activation</groupId>
-          <artifactId>javax.activation</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-  </profiles>
 
   <dependencies>
 
@@ -53,6 +35,13 @@
     <dependency>
       <groupId>com.nablarch.framework</groupId>
       <artifactId>nablarch-core-dataformat</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.eclipse.angus</groupId>
+      <artifactId>angus-activation</artifactId>
+      <version>1.0.0</version>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
