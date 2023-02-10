@@ -40,7 +40,6 @@
     <dependency>
       <groupId>org.eclipse.angus</groupId>
       <artifactId>angus-activation</artifactId>
-      <version>1.0.0</version>
       <scope>test</scope>
     </dependency>
 
